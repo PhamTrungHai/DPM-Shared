@@ -1,53 +1,124 @@
-# React + TypeScript + Vite
+# DPM.UI.Shared
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A shared UI component library for DPM applications, built with React and TypeScript.
 
-Currently, two official plugins are available:
+## Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19**: Latest version of React for building user interfaces
+- **TypeScript**: Provides type safety and better developer experience
+- **Vite**: Fast build tool and development server (used for plugin configuration)
+- **ESLint**: Code linting with TypeScript and React-specific rules
+- **pnpm**: Fast, disk-efficient package manager
+- **Turbo**: High-performance build system for monorepos
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- Node.js >= 20.0.0
+- pnpm >= 8.0.0
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd DPM.UI.Shared
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2. Install dependencies using pnpm:
+   ```bash
+   pnpm install
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Development
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Code Quality
+- Run linting: `pnpm lint`
+- Fix linting issues automatically: `pnpm lint --fix`
+
+### Building the Library
+- Build the library: `pnpm build`
+- This compiles TypeScript to JavaScript and generates type definitions in the `dist/` directory
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── Button.tsx      # Reusable Button component
+│   ├── counter.tsx     # Counter component
+│   └── index.ts        # Component exports
+├── App.tsx             # Example app (for development/testing)
+├── index.ts            # Main library export
+└── index.css           # Global styles
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Usage
+
+This library exports React components that can be imported and used in other DPM applications.
+
+### Importing Components
+
+```typescript
+import { Button, Counter } from 'dpm-shared';
+// or import specific components
+import { Button } from 'dpm-shared/button';
+import { Counter } from 'dpm-shared/counter';
+```
+
+### Example Usage
+
+```tsx
+import React from 'react';
+import { Button, Counter } from 'dpm-shared';
+
+function MyApp() {
+  return (
+    <div>
+      <Button />
+      <Counter />
+    </div>
+  );
+}
+```
+
+## Component Documentation
+
+### Button
+A simple button component with click counter functionality.
+
+**Props**: None (currently)
+
+**Example**:
+```tsx
+<Button />
+```
+
+### Counter
+A counter component (implementation details in `src/components/counter.tsx`).
+
+**Props**: None (currently)
+
+**Example**:
+```tsx
+<Counter />
+```
+
+## Build Configuration
+
+- **TypeScript**: Configured for React JSX, outputs to `dist/` directory
+- **ESLint**: Includes React hooks and refresh plugins
+- **Package Exports**: Supports both main export and individual component exports
+
+## Contributing
+
+1. Follow the existing code style and TypeScript conventions
+2. Run `pnpm lint` before committing
+3. Ensure all components are properly typed
+4. Update this README if adding new components
+
+## License
 
 ```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
 import reactDom from 'eslint-plugin-react-dom'
 
 export default defineConfig([
