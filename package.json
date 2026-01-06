@@ -1,19 +1,22 @@
 {
   "name": "dpm-shared",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./button": {
+      "import": "./dist/components/Button.js",
+      "types": "./dist/components/Button.d.ts"
+    },
+    "./counter": {
+      "import": "./dist/components/counter.js",
+      "types": "./dist/components/counter.d.ts"
     }
   },
-  "files": [
-    "dist"
-  ],
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "lint": "eslint ."
