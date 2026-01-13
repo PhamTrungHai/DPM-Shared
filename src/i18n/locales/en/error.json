@@ -1,0 +1,22 @@
+{
+  "404": {
+    "title": "Page Not Found",
+    "message": "The page you are looking for does not exist."
+  },
+  "401": {
+    "title": "Unauthorized",
+    "message": "You are not authorized to perform this action."
+  },
+  "500": {
+    "title": "Server Error",
+    "message": "An unexpected server error occurred."
+  },
+  "invalidInput": {
+    "title": "Invalid Input",
+    "message": "The data provided is not valid."
+  },
+  "timeout": {
+    "title": "Timeout",
+    "message": "The request timed out. Please try again."
+  }
+}
