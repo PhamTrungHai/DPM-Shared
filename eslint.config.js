@@ -5,6 +5,7 @@ import eslintImport from 'eslint-plugin-import'
 import eslintPrettier from 'eslint-plugin-prettier'
 import eslintTurbo from 'eslint-plugin-turbo'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import onlyWarn from "eslint-plugin-only-warn";
 import tseslint, { parser } from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
@@ -12,13 +13,14 @@ export default defineConfig([
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
-    plugins: [
-      reactHooks, 
+    plugins: {
+      reactHooks,
       reactRefresh,
       eslintImport,
       eslintPrettier,
       eslintTurbo,
-    ],
+      onlyWarn
+    },
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -29,13 +31,13 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
       sourceType: 'module',
-      ecmaFeatures: {
-      jsx: true,
-    },
       parser,
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
     },
 

@@ -9,6 +9,13 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/*"],
+      "@/api": ["src/api/*"],
+      "@/components": ["src/components/*"],
+      "@/hooks": ["src/hooks/*"],
+      "@/i18n": ["src/i18n/*"],
+      "@/tenant": ["src/tenant/*"],
+      "@/types": ["src/types/*"],
+      "@/utils": ["src/utils/*"]
     }
   },
   "include": ["src"],

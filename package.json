@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Shared UI component library for DPM applications",
   "main": "dist/index.js",
+  "type": "module",
   "types": "dist/index.d.ts",
   "sideEffects": [
     "dist/**/*.css"
@@ -15,24 +16,40 @@
     "./styles": {
       "import": "./dist/styles/index.css"
     },
-    "./button": {
-      "import": "./dist/components/Button.js",
-      "types": "./dist/components/Button.d.ts"
-    },
-    "./counter": {
-      "import": "./dist/components/counter.js",
-      "types": "./dist/components/counter.d.ts"
+    "./components": {
+      "import": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
     },
     "./api": {
       "import": "./dist/api/index.js",
       "types": "./dist/api/index.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.js",
+      "types": "./dist/hooks/index.d.ts"
+    },
+    "./i18n": {
+      "import": "./dist/i18n/index.js",
+      "types": "./dist/i18n/index.d.ts"
+    },
+    "./tenant": {
+      "import": "./dist/tenant/index.js",
+      "types": "./dist/tenant/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "types": "./dist/utils/index.d.ts"
     }
   },
   "scripts": {
     "build": "tsc && pnpm run build:styles",
     "build:styles": "pnpm run build:tailwind",
     "build:tailwind": "tailwindcss -i ./src/styles/globals.css -o ./dist/styles/index.css --minify",
-    "lint": "eslint .",
+    "lint": "eslint src",
     "dev": "tsc --watch"
   },
   "dependencies": {
