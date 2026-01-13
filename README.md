@@ -36,8 +36,53 @@ A shared UI component library for DPM applications, built with React and TypeScr
 - Fix linting issues automatically: `pnpm lint --fix`
 
 ### Building the Library
-- Build the library: `pnpm build`
-- This compiles TypeScript to JavaScript and generates type definitions in the `dist/` directory
+
+The library build process handles both TypeScript compilation and CSS generation:
+
+```bash
+pnpm build
+```
+
+This command:
+1. Compiles TypeScript to JavaScript with type definitions
+2. Builds Tailwind CSS from `src/styles/globals.css`
+3. Bundles component styles into `dist/styles/index.css`
+
+**Build outputs:**
+- `dist/` - Compiled components and styles
+- `dist/index.js` - Main library entry point
+- `dist/index.d.ts` - TypeScript type definitions
+- `dist/styles/index.css` - Compiled Tailwind styles (tree-shakeable)
+
+### Development Watch Mode
+- Watch TypeScript changes: `pnpm dev`
+- For CSS changes, run `pnpm build:tailwind`
+
+## Usage in Other Packages
+
+### Import Components
+```typescript
+import { Button, Counter } from 'dpm-shared';
+```
+
+### Import Styles
+```typescript
+// Import all compiled Tailwind styles (tree-shakeable)
+import 'dpm-shared/styles';
+```
+
+Or use individual component imports:
+```typescript
+import { Button } from 'dpm-shared/button';
+import { Counter } from 'dpm-shared/counter';
+```
+
+### Available Exports
+- Default: `dpm-shared` - All components
+- Styles: `dpm-shared/styles` - Compiled Tailwind CSS
+- Button: `dpm-shared/button` - Button component only
+- Counter: `dpm-shared/counter` - Counter component only
+- API: `dpm-shared/api` - API utilities
 
 ## Project Structure
 
