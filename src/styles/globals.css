@@ -1,0 +1,34 @@
+/**
+ * Global styles for DPM shared component library
+ * This file is processed by Tailwind CSS and bundled for consumption by other packages
+ */
+
+@import "tailwindcss";
+
+/* Base styles */
+@layer base {
+  :root {
+    @apply text-gray-900 dark:text-gray-50;
+  }
+
+  body {
+    @apply font-sans;
+  }
+}
+
+/* Component-specific styles */
+@layer components {
+  .dpm-button {
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
+  }
+
+  .dpm-button-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  .dpm-button-secondary {
+    @apply bg-gray-200 text-gray-900 hover:bg-gray-300;
+  }
+}
+
+/* Utilities - already provided by Tailwind @layer utilities */
