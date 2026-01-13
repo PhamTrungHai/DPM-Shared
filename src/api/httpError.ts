@@ -29,7 +29,7 @@ export function mapAxiosError(error: AxiosError): HttpError {
     }
 
     const status = error.response.status;
-    const data: any = error.response.data;
+    const data = error.response.data as { message?: string };
 
     switch (status) {
         case 400:
