@@ -10,13 +10,15 @@ export type HttpErrorType =
     | 'SERVER'
     | 'UNKNOWN';
 
+type HttpErrorDetails = string[];
 export class HttpError extends Error {
     status?: number;
     type: HttpErrorType;
-    details?: unknown;
+    details?: HttpErrorDetails;
 
-    constructor(message: string, type: HttpErrorType, status?: number, details?: unknown) {
+    constructor(message: string, type: HttpErrorType, status?: number, details?: HttpErrorDetails) {
         super(message);
+        this.name = 'HttpError';
         this.type = type;
         this.status = status;
         this.details = details;
@@ -29,11 +31,17 @@ export function mapAxiosError(error: AxiosError): HttpError {
     }
 
     const status = error.response.status;
-    const data = error.response.data as { message?: string };
+    const data = error.response.data as { message?: string; errors?: string[] };
+    console.log('mapAxiosError data:', data);
 
     switch (status) {
         case 400:
-            return new HttpError(data?.message || 'Validation error', 'VALIDATION', status, data);
+            return new HttpError(
+                data?.message || 'Validation error',
+                'VALIDATION',
+                status,
+                data.errors
+            );
         case 401:
             return new HttpError('Unauthorized', 'UNAUTHORIZED', status);
         case 403:
@@ -43,6 +51,8 @@ export function mapAxiosError(error: AxiosError): HttpError {
         case 500:
             return new HttpError('Server error', 'SERVER', status);
         default:
-            return new HttpError(data?.message || 'Unknown error', 'UNKNOWN', status, data);
+            return new HttpError(data?.message || 'Unknown error', 'UNKNOWN', status, [
+                'Unknown error',
+            ]);
     }
 }

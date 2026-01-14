@@ -1,11 +1,27 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
+import { registerInterceptors } from './interceptors/register';
 
-const API_URL = import.meta.env.VITE_API_URL;
+let axiosClient: AxiosInstance;
 
-export const axiosClient = axios.create({
-    baseURL: API_URL,
-    timeout: 15000,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+export function createAxiosClient(baseURL: string): AxiosInstance {
+    const client = axios.create({
+        baseURL,
+        timeout: 30_000,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    // Register interceptors
+    registerInterceptors(client);
+
+    axiosClient = client;
+    return client;
+}
+
+export function getAxiosClient(): AxiosInstance {
+    if (!axiosClient) {
+        throw new Error('Axios client not initialized');
+    }
+    return axiosClient;
+}

@@ -1,5 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { axiosClient } from '../axiosClient';
+import { getAxiosClient } from '../axiosClient';
 import { tokenStorage } from '@/utils/tokenStorage';
 
 let isRefreshing = false;
@@ -17,6 +17,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 };
 
 export const handleAuthError = async (error: AxiosError) => {
+    const axiosClient = getAxiosClient();
     const originalRequest = error.config as InternalAxiosRequestConfig & {
         _retry?: boolean;
     };
