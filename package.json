@@ -43,6 +43,10 @@
     "./utils": {
       "import": "./dist/utils/index.js",
       "types": "./dist/utils/index.d.ts"
+    },
+    "./indexed-db": {
+      "import": "./dist/indexed-db/index.js",
+      "types": "./dist/indexed-db/index.d.ts"
     }
   },
   "scripts": {
@@ -100,6 +104,6 @@
   },
   "packageManager": "pnpm@10.19.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   }
 }

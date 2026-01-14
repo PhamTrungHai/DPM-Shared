@@ -19,7 +19,6 @@ export default defineConfig([
       eslintImport,
       eslintPrettier,
       eslintTurbo,
-      onlyWarn
     },
     extends: [
       js.configs.recommended,
