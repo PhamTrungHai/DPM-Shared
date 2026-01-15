@@ -16,7 +16,7 @@ steps:
       workingFile: .npmrc
 
   - script: |
-      npm ci
+      npm i
       npm run build
       npm publish --workspace=@my-org/dpm-shared
     displayName: Publish package
