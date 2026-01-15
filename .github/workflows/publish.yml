@@ -43,3 +43,5 @@ jobs:
 
       - name: Publish to Azure Artifacts
         run: npm publish # The .npmrc file in the home directory is used for authentication
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # Ensure the token is available as an environment variable
