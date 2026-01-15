@@ -1,22 +1,64 @@
-trigger:
+trigger: none
+pr:
   branches:
     include:
       - main
 
-pool:
-  vmImage: ubuntu-latest
+# Publish ONLY when a version tag is pushed
+resources:
+  pipelines: []
+  repositories: []
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '24.x'
+stages:
+  - stage: Build
+    displayName: Build & Test
+    jobs:
+      - job: build
+        pool:
+          vmImage: ubuntu-latest
 
-  - task: npmAuthenticate@0
-    inputs:
-      workingFile: .npmrc
+        steps:
+          - checkout: self
+            fetchDepth: 0
 
-  - script: |
-      npm i
-      npm run build
-      npm publish --workspace=@my-org/dpm-shared
-    displayName: Publish package
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '20.x'
+
+          - script: |
+              npm i
+              npm run build
+            displayName: Build
+
+  - stage: Publish
+    displayName: Publish to Azure Artifacts
+    dependsOn: Build
+    condition: and(
+      succeeded(),
+      startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+    )
+
+    jobs:
+      - job: publish
+        pool:
+          vmImage: ubuntu-latest
+
+        steps:
+          - checkout: self
+            fetchDepth: 0
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '24.x'
+
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+
+          - script: |
+              VERSION=${BUILD_SOURCEBRANCHNAME#v}
+              echo "Publishing version $VERSION"
+
+              npm version $VERSION --no-git-tag-version
+              npm publish --access restricted
+            displayName: Publish package
