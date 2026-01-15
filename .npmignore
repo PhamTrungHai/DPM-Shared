@@ -45,6 +45,8 @@ vite.config.*
 .git/
 .gitignore
 .gitattributes
+*.yml
+*.sh
 
 # ---- Docs & Misc ----
 docs/
