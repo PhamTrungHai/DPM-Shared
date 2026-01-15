@@ -1,0 +1,32 @@
+name: Publish npm package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://pkgs.dev.azure.com/ORG/PROJECT/_packaging/my-npm-feed/npm/registry/
+          scope: '@my-org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish workspace package
+        run: npm publish --workspace=@my-org/dpm-shared
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
