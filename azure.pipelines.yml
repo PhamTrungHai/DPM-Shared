@@ -1,0 +1,22 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '24.x'
+
+  - task: npmAuthenticate@0
+    inputs:
+      workingFile: .npmrc
+
+  - script: |
+      npm ci
+      npm run build
+      npm publish --workspace=@my-org/dpm-shared
+    displayName: Publish package
