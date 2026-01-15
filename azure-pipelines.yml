@@ -23,7 +23,7 @@ stages:
 
           - task: NodeTool@0
             inputs:
-              versionSpec: '20.x'
+              versionSpec: '24.x'
 
           - script: |
               npm i
@@ -50,6 +50,15 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: '24.x'
+
+          # 🔐 Generate Base64 token using node token.cjs
+          - script: |
+              echo "Generating Base64 token..."
+              TOKEN_BASE64=$(node token.cjs)
+              echo "##vso[task.setvariable variable=NPM_TOKEN;issecret=true]$TOKEN_BASE64"
+            displayName: Generate Base64 token
+            env:
+              NPM_TOKEN: $(NPM_TOKEN)
 
           - task: npmAuthenticate@0
             inputs:
