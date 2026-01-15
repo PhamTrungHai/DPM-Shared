@@ -1,0 +1,61 @@
+# ---- Dependencies ----
+node_modules/
+.pnp/
+.pnp.js
+
+# ---- Logs ----
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- OS / Editor ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# ---- Environment ----
+.env
+.env.*
+!.env.example
+
+# ---- Source (if publishing build output only) ----
+src/
+test/
+tests/
+__tests__/
+coverage/
+
+# ---- Build tooling ----
+tsconfig*.json
+babel.config.*
+.eslintrc*
+.prettierrc*
+eslint.config.*
+jest.config.*
+vitest.config.*
+rollup.config.*
+webpack.config.*
+vite.config.*
+
+# ---- CI / VCS ----
+.github/
+.git/
+.gitignore
+.gitattributes
+
+# ---- Docs & Misc ----
+docs/
+*.md
+CHANGELOG*
+README.draft.md
+
+# ---- Monorepo ----
+packages/*/src/
+packages/*/test/
+packages/*/coverage/
+
+# ---- Local builds ----
+dist/**/*.map
