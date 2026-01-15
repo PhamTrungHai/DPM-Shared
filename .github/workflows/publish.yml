@@ -18,12 +18,12 @@ jobs:
       - name: Setup Azure DevOps .npmrc
         uses: ponicode/azure-devops-npm-action@master
         with:
-          organization: 'New-Premises-Group' # Replace with your Azure DevOps organization name
-          project: 'IfWhat'         # Replace with your Azure DevOps project name (optional if organization-scoped)
-          registry: 'my-npm-registry'           # Replace with your Azure Artifacts feed name
-          user: 'git-bot'        # Placeholder username (can be anything)
+          organization: New-Premises-Group # Replace with your Azure DevOps organization name
+          project: IfWhat         # Replace with your Azure DevOps project name (optional if organization-scoped)
+          registry: my-npm-registry           # Replace with your Azure Artifacts feed name
+          user: git-bot        # Placeholder username (can be anything)
           password: ${{ secrets.NPM_TOKEN }} # Reference the GitHub secret
-          email: '41898282+github-actions[bot]@users.noreply.github.com'      # Replace with your email
+          email: 41898282+github-actions[bot]@users.noreply.github.com      # Replace with your email
 
       # The action creates a .npmrc file in the current directory.
       # It needs to be moved to the home directory for `npm install` and `npm publish` to use it correctly
@@ -43,5 +43,3 @@ jobs:
 
       - name: Publish to Azure Artifacts
         run: npm publish # The .npmrc file in the home directory is used for authentication
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # Ensure the token is available as an environment variable
