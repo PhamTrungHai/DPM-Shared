@@ -1,45 +1,30 @@
-name: Publish to Azure Artifacts NPM
+name: Publish npm package
 
 on:
   push:
-      branches:
-        - main
-  # release:
-  #   types:
-  #     - published # This triggers the workflow when a new release is published on GitHub
+    branches:
+      - main
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      # Use a specific action to set up the .npmrc file for Azure DevOps authentication
-      - name: Setup Azure DevOps .npmrc
-        uses: ponicode/azure-devops-npm-action@master
-        with:
-          organization: New-Premises-Group # Replace with your Azure DevOps organization name
-          project: IfWhat         # Replace with your Azure DevOps project name (optional if organization-scoped)
-          registry: my-npm-registry           # Replace with your Azure Artifacts feed name
-          user: git-bot        # Placeholder username (can be anything)
-          password: ${{ secrets.NPM_TOKEN }} # Reference the GitHub secret
-          email: 41898282+github-actions[bot]@users.noreply.github.com      # Replace with your email
-
-      # The action creates a .npmrc file in the current directory.
-      # It needs to be moved to the home directory for `npm install` and `npm publish` to use it correctly
-      - name: Move .npmrc to home directory
-        run: cp .npmrc ~
-
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x' # Specify the desired Node.js version
+          node-version: 24
 
-      - name: Install dependencies (optional, if your package has dependencies)
-        run: npm install
+      - name: Install dependencies
+        run: npm i
 
-      - name: Build project (optional, if your package needs building)
+      - name: Build
         run: npm run build
 
-      - name: Publish to Azure Artifacts
-        run: npm publish # The .npmrc file in the home directory is used for authentication
+      - name: Publish workspace package
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
