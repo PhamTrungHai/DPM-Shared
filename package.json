@@ -1,5 +1,5 @@
 {
-  "name": "dpm-shared",
+  "name": "@my-org/dpm-shared",
   "version": "1.0.0",
   "description": "Shared UI component library for DPM applications",
   "main": "dist/index.js",
