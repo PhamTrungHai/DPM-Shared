@@ -31,16 +31,14 @@ stages:
                       call corepack enable
                       call corepack prepare pnpm@10.19.0 --activate
 
-                      call pnpm install
+                      call pnpm install --frozen-lockfile
                       call pnpm run build
                   displayName: Install & Build (pnpm)
 
     - stage: Publish
       displayName: Publish to Azure Artifacts
       dependsOn: Build
-      condition: and(
-          succeeded(),
-          startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+      condition: succeeded()
 
       jobs:
           - job: publish
