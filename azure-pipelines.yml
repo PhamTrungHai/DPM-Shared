@@ -1,67 +1,99 @@
-trigger:
-    branches:
-        include:
-            - develop
-            - staging
-            - release/*
+# ---------------------------------------------------------------------------------
+# Quy trình CI/CD: Tự động Build và Publish thư viện UI lên Azure Artifacts
+# ---------------------------------------------------------------------------------
 
+# Kích hoạt Build khi có thay đổi trên các nhánh chính
+trigger:
+  branches:
+    include:
+      - develop
+      - master
+      - release/*
+
+# Sử dụng Agent Docker nội bộ của công ty
 pool:
-    name: 'AgentDocker'
+  name: 'AgentDocker'
+
+variables:
+  # 1. Quản lý Version (Giữ nguyên)
+  major: '1'
+  minor: '0'
+  patch: $[counter(format('{0}.{1}', variables['major'], variables['minor']), 0)]
+  sharedVersion: '$(major).$(minor).$(patch)'
+  
+  # 2. Project và Feed
+  project: 'DPM.Platform'
+  feedName: 'DPM.UI.Shared'
+  targetFeedUrl: 'https://devopsrc.vuthao.com/SourceCode/$(project)/_packaging/$(feedName)/npm/registry/'
+
+# Tên của lượt Build hiển thị trên giao diện Azure DevOps (ví dụ: 1.0.45)
+name: $(sharedVersion)
 
 stages:
-    - stage: Build
-      displayName: Build & Test
-      jobs:
-          - job: build
-            displayName: Build
-            steps:
-                - checkout: self
-                  fetchDepth: 0
+  # GIAI ĐOẠN 1: KIỂM TRA MÃ NGUỒN
+  - stage: Build
+    displayName: "Stage 1: Build & Test"
+    jobs:
+      - job: build
+        displayName: "Kiểm tra và Biên dịch"
+        steps:
+          - checkout: self
+            fetchDepth: 0 # Lấy toàn bộ lịch sử Git (cần thiết cho một số lệnh build)
 
-                - task: NodeTool@0
-                  inputs:
-                      versionSpec: '24.x'
+          - task: NodeTool@0
+            displayName: "Cài đặt môi trường Node.js (24.x)"
+            inputs:
+              versionSpec: '24.x'
 
-                - script: |
-                      corepack enable
-                      corepack prepare pnpm@10.19.0 --activate
+          - script: |
+              # Kích hoạt tính năng quản lý package hiện đại
+              corepack enable
+              # Sử dụng phiên bản pnpm chính xác giống dưới máy local
+              corepack prepare pnpm@10.19.0 --activate
+              
+              # Cài đặt thư viện với chế độ nghiêm ngặt (không thay đổi file lock)
+              pnpm install --frozen-lockfile
+              # Biên dịch mã nguồn (TS -> JS)
+              pnpm run build
+            displayName: "Pnpm Install & Build"
 
-                      pnpm install --frozen-lockfile
-                      pnpm run build
-                  displayName: Install & Build (pnpm)
+  # GIAI ĐOẠN 2: PHÁT HÀNH THƯ VIỆN
+  - stage: Publish
+    displayName: "Stage 2: Publish to Artifacts"
+    dependsOn: Build
+    # Điều kiện: Stage Build phải thành công VÀ đang ở nhánh develop hoặc master
+    condition: |
+      and(
+        succeeded(),
+        or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+      )
+    jobs:
+      - job: publish
+        displayName: "Đẩy thư viện lên Feed"
+        steps:
+          - checkout: self
 
-    - stage: Publish
-      displayName: Publish to Azure Artifacts
-      dependsOn: Build
-      condition: and(
-          succeeded(),
-          startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '24.x'
 
-      jobs:
-          - job: publish
-            displayName: Publish
-            steps:
-                - checkout: self
-                  fetchDepth: 0
+          # BƯỚC QUAN TRỌNG: Task này tự động sinh Token và bơm vào file .npmrc
+          # Giúp chúng ta không cần dán mã PAT thủ công vào code, cực kỳ bảo mật
+          - task: npmAuthenticate@0
+            displayName: "Xác thực quyền ghi vào Feed Artifacts"
+            inputs:
+              workingFile: .npmrc
 
-                - task: NodeTool@0
-                  inputs:
-                      versionSpec: '24.x'
-
-                - task: npmAuthenticate@0
-                  inputs:
-                      workingFile: .npmrc
-                - script: |
-                      pnpm whoami --registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/
-                  displayName: Debug whoami
-
-                - script: |
-                      corepack enable
-                      corepack prepare pnpm@10.19.0 --activate
-
-                      set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
-                      echo Publishing version %VERSION%
-
-                      pnpm version %VERSION% --no-git-tag-version
-                      pnpm publish
-                  displayName: Publish package (pnpm)
+          - script: |
+              corepack enable
+              corepack prepare pnpm@10.19.0 --activate
+              
+              # 1. Cập nhật version từ Pipeline vào package.json ngay trước khi đẩy
+              # --no-git-tag-version: không tạo thêm một commit Git mới tại server
+              echo "Cấu hình phiên bản: $(sharedVersion)"
+              pnpm version $(sharedVersion) --no-git-tag-version
+              
+              # 2. Publish thư viện lên server nội bộ
+              # --no-git-checks: bỏ qua kiểm tra trạng thái git trên máy agent
+              pnpm publish --registry $(targetFeedUrl) --no-git-checks
+            displayName: "Đóng gói & Đẩy lên Azure Artifacts"
