@@ -23,11 +23,11 @@ stages:
                       versionSpec: '24.x'
 
                 - script: |
-                      corepack enable
-                      corepack prepare pnpm@10.19.0 --activate
+                      call corepack enable
+                      call corepack prepare pnpm@10.19.0 --activate
 
-                      pnpm install --frozen-lockfile
-                      pnpm run build
+                      call pnpm install --frozen-lockfile
+                      call pnpm run build
                   displayName: Install & Build (pnpm)
 
     - stage: Publish
@@ -52,6 +52,6 @@ stages:
                       set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
                       echo Publishing version %VERSION%
 
-                      pnpm version %VERSION% --no-git-tag-version
-                      pnpm publish -registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/
+                      call pnpm version %VERSION% --no-git-tag-version
+                      call pnpm publish -registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/
                   displayName: Publish package (pnpm)
