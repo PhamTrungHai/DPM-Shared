@@ -5,13 +5,12 @@ pr:
             - develop
             - staging
             - release/*
-
+pool:
+    name: 'AgentDocker'
 # Publish ONLY when a version tag is pushed
 resources:
     pipelines: []
     repositories: []
-pool:
-    name: 'AgentDocker'
 stages:
     - stage: Build
       displayName: Build & Test
