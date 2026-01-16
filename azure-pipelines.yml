@@ -7,7 +7,7 @@ pr:
             - release/*
 
 pool:
-    name: AgentDocker 
+  name: 'AgentDocker'
 stages:
     - stage: Build
       displayName: Build & Test
