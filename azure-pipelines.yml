@@ -6,10 +6,6 @@ pr:
             - staging
             - release/*
 
-# Publish ONLY when a version tag is pushed
-resources:
-    pipelines: []
-    repositories: []
 pool:
     name: AgentDocker 
 stages:
