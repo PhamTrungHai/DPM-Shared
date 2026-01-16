@@ -55,6 +55,8 @@ stages:
                       workingFile: .npmrc
 
                 - script: |
+                      setlocal enabledelayedexpansion
+
                       call corepack enable
                       call corepack prepare pnpm@10.19.0 --activate
 
