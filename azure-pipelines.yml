@@ -43,14 +43,10 @@ stages:
                   inputs:
                       versionSpec: '24.x'
 
-                - task: npmAuthenticate@0
-                  inputs:
-                      workingFile: .npmrc
-
                 - script: |
                       set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
                       echo "Publishing version %VERSION%"
 
                       npm version %VERSION% --no-git-tag-version
-                      npm publish --access restricted
+                      npm publish
                   displayName: Publish package
