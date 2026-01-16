@@ -15,7 +15,7 @@ pool:
   name: 'AgentDocker'
 
 variables:
-  # 1. Quản lý Version (Giữ nguyên)
+  # 1. Quản lý Version
   major: '1'
   minor: '0'
   patch: $[counter(format('{0}.{1}', variables['major'], variables['minor']), 0)]
@@ -47,14 +47,14 @@ stages:
 
           - script: |
               # Kích hoạt tính năng quản lý package hiện đại
-              corepack enable
+              call corepack enable
               # Sử dụng phiên bản pnpm chính xác giống dưới máy local
-              corepack prepare pnpm@10.19.0 --activate
+              call corepack prepare pnpm@10.19.0 --activate
               
               # Cài đặt thư viện với chế độ nghiêm ngặt (không thay đổi file lock)
-              pnpm install --frozen-lockfile
+              call pnpm install --frozen-lockfile
               # Biên dịch mã nguồn (TS -> JS)
-              pnpm run build
+              call pnpm run build
             displayName: "Pnpm Install & Build"
 
   # GIAI ĐOẠN 2: PHÁT HÀNH THƯ VIỆN
@@ -85,15 +85,15 @@ stages:
               workingFile: .npmrc
 
           - script: |
-              corepack enable
-              corepack prepare pnpm@10.19.0 --activate
+              call corepack enable
+              call corepack prepare pnpm@10.19.0 --activate
               
               # 1. Cập nhật version từ Pipeline vào package.json ngay trước khi đẩy
               # --no-git-tag-version: không tạo thêm một commit Git mới tại server
               echo "Cấu hình phiên bản: $(sharedVersion)"
-              pnpm version $(sharedVersion) --no-git-tag-version
+              call pnpm version $(sharedVersion) --no-git-tag-version
               
               # 2. Publish thư viện lên server nội bộ
               # --no-git-checks: bỏ qua kiểm tra trạng thái git trên máy agent
-              pnpm publish --registry $(targetFeedUrl) --no-git-checks
+              call pnpm publish --registry $(targetFeedUrl) --no-git-checks
             displayName: "Đóng gói & Đẩy lên Azure Artifacts"
