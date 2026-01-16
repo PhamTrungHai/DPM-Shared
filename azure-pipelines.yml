@@ -1,13 +1,13 @@
-trigger: 
-  branches:
-    include:
-      - develop
-      - staging
-      - release/*
+trigger:
+    branches:
+        include:
+            - develop
+            - staging
+            - release/*
 
 pool:
-  name: 'AgentDocker'
-  
+    name: 'AgentDocker'
+
 stages:
     - stage: Build
       displayName: Build & Test
@@ -48,7 +48,7 @@ stages:
                       workingFile: .npmrc
 
                 - script: |
-                      VERSION=${BUILD_SOURCEBRANCHNAME#v}
+                      set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
                       echo "Publishing version $VERSION"
 
                       npm version $VERSION --no-git-tag-version
