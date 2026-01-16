@@ -49,8 +49,8 @@ stages:
 
                 - script: |
                       set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
-                      echo "Publishing version $VERSION"
+                      echo "Publishing version %VERSION%"
 
-                      npm version $VERSION --no-git-tag-version
+                      npm version %VERSION% --no-git-tag-version
                       npm publish --access restricted
                   displayName: Publish package
