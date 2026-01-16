@@ -13,6 +13,7 @@ stages:
       displayName: Build & Test
       jobs:
           - job: build
+            displayName: Build
             steps:
                 - checkout: self
                   fetchDepth: 0
@@ -22,9 +23,12 @@ stages:
                       versionSpec: '24.x'
 
                 - script: |
-                      npm i
-                      npm run build
-                  displayName: Build
+                      corepack enable
+                      corepack prepare pnpm@10.19.0 --activate
+
+                      pnpm install --frozen-lockfile
+                      pnpm run build
+                  displayName: Install & Build (pnpm)
 
     - stage: Publish
       displayName: Publish to Azure Artifacts
@@ -35,6 +39,7 @@ stages:
 
       jobs:
           - job: publish
+            displayName: Publish
             steps:
                 - checkout: self
                   fetchDepth: 0
@@ -43,10 +48,17 @@ stages:
                   inputs:
                       versionSpec: '24.x'
 
-                - script: |
-                      set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
-                      echo "Publishing version %VERSION%"
+                - task: npmAuthenticate@0
+                  inputs:
+                      workingFile: .npmrc
 
-                      npm version %VERSION% --no-git-tag-version
-                      npm publish
-                  displayName: Publish package
+                - script: |
+                      corepack enable
+                      corepack prepare pnpm@10.19.0 --activate
+
+                      set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
+                      echo Publishing version %VERSION%
+
+                      pnpm version %VERSION% --no-git-tag-version
+                      pnpm publish --access restricted
+                  displayName: Publish package (pnpm)
