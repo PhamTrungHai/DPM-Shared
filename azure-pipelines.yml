@@ -10,14 +10,13 @@ pr:
 resources:
     pipelines: []
     repositories: []
+pool:
+    name: AgentDocker 
 stages:
     - stage: Build
       displayName: Build & Test
       jobs:
           - job: build
-            pool:
-                name: AgentDocker
-
             steps:
                 - checkout: self
                   fetchDepth: 0
@@ -40,8 +39,6 @@ stages:
 
       jobs:
           - job: publish
-            pool:
-                name: AgentDocker
             steps:
                 - checkout: self
                   fetchDepth: 0
