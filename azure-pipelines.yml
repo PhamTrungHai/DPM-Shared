@@ -49,6 +49,8 @@ stages:
                       versionSpec: '24.x'
 
                 - script: |
+                      call corepack enable
+                      call corepack prepare pnpm@10.19.0 --activate
                       set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
                       echo Publishing version %VERSION%
 
