@@ -51,6 +51,9 @@ stages:
                 - task: npmAuthenticate@0
                   inputs:
                       workingFile: .npmrc
+                - script: |
+                      pnpm whoami --registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/
+                  displayName: Debug whoami
 
                 - script: |
                       corepack enable
@@ -60,5 +63,5 @@ stages:
                       echo Publishing version %VERSION%
 
                       pnpm version %VERSION% --no-git-tag-version
-                      pnpm publish --access restricted
+                      pnpm publish
                   displayName: Publish package (pnpm)
