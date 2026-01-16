@@ -26,7 +26,7 @@ stages:
                       call corepack enable
                       call corepack prepare pnpm@10.19.0 --activate
 
-                      call pnpm install --frozen-lockfile
+                      call pnpm install
                       call pnpm run build
                   displayName: Install & Build (pnpm)
 
