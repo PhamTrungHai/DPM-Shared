@@ -11,15 +11,12 @@ resources:
     pipelines: []
     repositories: []
 pool:
-    name: 'AgentDocker'
+    name: AgentDocker 
 stages:
     - stage: Build
       displayName: Build & Test
       jobs:
           - job: build
-            pool:
-                vmImage: ubuntu-latest
-
             steps:
                 - checkout: self
                   fetchDepth: 0
@@ -42,9 +39,6 @@ stages:
 
       jobs:
           - job: publish
-            pool:
-                vmImage: ubuntu-latest
-
             steps:
                 - checkout: self
                   fetchDepth: 0
