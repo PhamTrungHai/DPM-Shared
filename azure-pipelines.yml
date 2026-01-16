@@ -1,66 +1,65 @@
 trigger: none
 pr:
-  branches:
-    include:
-      - develop
-      - staging
-      - release/*
+    branches:
+        include:
+            - develop
+            - staging
+            - release/*
 
 # Publish ONLY when a version tag is pushed
 resources:
-  pipelines: []
-  repositories: []
+    pipelines: []
+    repositories: []
 
 stages:
-  - stage: Build
-    displayName: Build & Test
-    jobs:
-      - job: build
-        pool:
-          vmImage: ubuntu-latest
+    - stage: Build
+      displayName: Build & Test
+      jobs:
+          - job: build
+            pool:
+                vmImage: ubuntu-latest
 
-        steps:
-          - checkout: self
-            fetchDepth: 0
+            steps:
+                - checkout: self
+                  fetchDepth: 0
 
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '24.x'
+                - task: NodeTool@0
+                  inputs:
+                      versionSpec: '24.x'
 
-          - script: |
-              npm i
-              npm run build
-            displayName: Build
+                - script: |
+                      npm i
+                      npm run build
+                  displayName: Build
 
-  - stage: Publish
-    displayName: Publish to Azure Artifacts
-    dependsOn: Build
-    condition: and(
-      succeeded(),
-      startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
-      )
+    - stage: Publish
+      displayName: Publish to Azure Artifacts
+      dependsOn: Build
+      condition: and(
+          succeeded(),
+          startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 
-    jobs:
-      - job: publish
-        pool:
-          vmImage: ubuntu-latest
+      jobs:
+          - job: publish
+            pool:
+                vmImage: ubuntu-latest
 
-        steps:
-          - checkout: self
-            fetchDepth: 0
+            steps:
+                - checkout: self
+                  fetchDepth: 0
 
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '24.x'
+                - task: NodeTool@0
+                  inputs:
+                      versionSpec: '24.x'
 
-          - task: npmAuthenticate@0
-            inputs:
-              workingFile: .npmrc
+                - task: npmAuthenticate@0
+                  inputs:
+                      workingFile: .npmrc
 
-          - script: |
-              VERSION=${BUILD_SOURCEBRANCHNAME#v}
-              echo "Publishing version $VERSION"
+                - script: |
+                      VERSION=${BUILD_SOURCEBRANCHNAME#v}
+                      echo "Publishing version $VERSION"
 
-              npm version $VERSION --no-git-tag-version
-              npm publish --access restricted
-            displayName: Publish package
+                      npm version $VERSION --no-git-tag-version
+                      npm publish --access restricted
+                  displayName: Publish package
