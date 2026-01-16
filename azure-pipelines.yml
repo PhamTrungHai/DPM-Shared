@@ -48,10 +48,6 @@ stages:
                   inputs:
                       versionSpec: '24.x'
 
-                - task: npmAuthenticate@0
-                  inputs:
-                      workingFile: .npmrc
-
                 - script: |
                       corepack enable
                       corepack prepare pnpm@10.19.0 --activate
@@ -60,5 +56,5 @@ stages:
                       echo Publishing version %VERSION%
 
                       pnpm version %VERSION% --no-git-tag-version
-                      pnpm publish
+                      pnpm publish -registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/
                   displayName: Publish package (pnpm)
