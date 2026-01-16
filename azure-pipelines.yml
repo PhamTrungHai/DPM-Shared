@@ -62,6 +62,6 @@ stages:
                       set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
                       echo Publishing version %VERSION%
 
-                      call pnpm version %VERSION%
-                      call pnpm publish --registry $(targetFeedUrl) --no-git-checks --no-scripts
+                      call pnpm version %VERSION% --no-git-tag-version --allow-dirty
+                      call pnpm publish --registry $(targetFeedUrl) --no-git-checks --ignore-scripts
                   displayName: Publish package (pnpm)
