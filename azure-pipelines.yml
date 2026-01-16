@@ -59,7 +59,24 @@ stages:
                 - script: |
                       call corepack enable
                       call corepack prepare pnpm@10.19.0 --activate
-                      set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
+                      REM ==== Detect base version from package.json ====
+                      for /f "tokens=2 delims=:," %%A in ('findstr "version" package.json') do set BASE_VERSION=%%~A
+                      set BASE_VERSION=%BASE_VERSION:"=%
+
+                      REM ==== Detect tag or branch ====
+                      echo SourceBranch=%BUILD_SOURCEBRANCH%
+                      echo SourceBranchName=%BUILD_SOURCEBRANCHNAME%
+
+                      if "%BUILD_SOURCEBRANCH:~0,10%"=="refs/tags" (
+                        REM Tag build → use tag version
+                        set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
+                      ) else (
+                        REM Branch build → append suffix
+                        set SHORT_SHA=%BUILD_SOURCEVERSION:~0,7%
+                        set BRANCH=%BUILD_SOURCEBRANCHNAME%
+                        set VERSION=%BASE_VERSION%-%BRANCH%-%SHORT_SHA%
+                      )
+
                       echo Publishing version %VERSION%
 
                       call pnpm version %VERSION% --no-git-tag-version --allow-dirty
