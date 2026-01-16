@@ -68,6 +68,7 @@ stages:
                       echo SourceBranchName=%BUILD_SOURCEBRANCHNAME%
                       echo SourceVersion=%BUILD_SOURCEVERSION%
 
+                      REM ==== Compute version ====
                       if "%BUILD_SOURCEBRANCH:~0,10%"=="refs/tags" (
                         REM Tag build → use tag version
                         set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
@@ -76,18 +77,18 @@ stages:
                         REM Branch build → append suffix
                         set SHORT_SHA=%BUILD_SOURCEVERSION:~0,7%
                         set BRANCH=%BUILD_SOURCEBRANCHNAME%
-                        set VERSION=%BASE_VERSION%-%BRANCH%-%SHORT_SHA%
-                        set PUBLISH_TAG=%BRANCH%
+                        set PUBLISH_TAG=dev
+                        set VERSION=!BASE_VERSION!-!BRANCH!-!SHORT_SHA!
                       )
 
                       echo Publishing version %VERSION%
-                      echo npm tag = %PUBLISH_TAG%
+                      echo npm tag = !PUBLISH_TAG!
 
-                      call pnpm version %VERSION% --no-git-tag-version --allow-dirty
+                      call pnpm version !VERSION! --no-git-tag-version --allow-dirty
 
                       if "%BUILD_SOURCEBRANCH:~0,10%"=="refs/tags" (
                         call pnpm publish --registry $(targetFeedUrl) --no-git-checks --ignore-scripts
                       ) else (
-                        call pnpm publish --registry $(targetFeedUrl) --no-git-checks --ignore-scripts --tag %PUBLISH_TAG%
+                        call pnpm publish --registry $(targetFeedUrl) --no-git-checks --ignore-scripts --tag !PUBLISH_TAG!
                       )
                   displayName: Publish package (pnpm)
