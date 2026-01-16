@@ -1,5 +1,5 @@
 {
-  "name": "@my-org/dpm-shared",
+  "name": "dpm-shared",
   "version": "1.0.2",
   "description": "Shared UI component library for DPM applications",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
     "dist/**/*.css"
   ],
   "publishConfig": {
-    "registry": "https://pkgs.dev.azure.com/ORG/PROJECT/_packaging/my-npm-feed/npm/registry/"
+    "registry": "https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/"
   },
   "exports": {
     ".": {
