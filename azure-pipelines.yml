@@ -47,6 +47,9 @@ stages:
                 - task: NodeTool@0
                   inputs:
                       versionSpec: '24.x'
+                - task: npmAuthenticate@0
+                  inputs:
+                      workingFile: .npmrc
 
                 - script: |
                       call corepack enable
@@ -55,5 +58,5 @@ stages:
                       echo Publishing version %VERSION%
 
                       call pnpm version %VERSION% --no-git-tag-version
-                      call pnpm publish -registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/ --no-git-checks --no-scripts
+                      call pnpm publish --registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/ --no-git-checks --no-scripts
                   displayName: Publish package (pnpm)
