@@ -2,7 +2,9 @@ trigger: none
 pr:
   branches:
     include:
-      - main
+      - develop
+      - staging
+      - release/*
 
 # Publish ONLY when a version tag is pushed
 resources:
