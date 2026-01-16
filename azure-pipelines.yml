@@ -8,6 +8,11 @@ trigger:
 pool:
     name: 'AgentDocker'
 
+variables:
+    project: 'DPM.Platform'
+    feedName: 'DPM.UI.Shared'
+    targetFeedUrl: 'https://devopsrc.vuthao.com/SourceCode/$(project)/_packaging/$(feedName)/npm/registry/'
+
 stages:
     - stage: Build
       displayName: Build & Test
@@ -57,6 +62,6 @@ stages:
                       set VERSION=%BUILD_SOURCEBRANCHNAME:~1%
                       echo Publishing version %VERSION%
 
-                      call pnpm version %VERSION% --no-git-tag-version
-                      call pnpm publish --registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/ --no-git-checks --no-scripts
+                      call pnpm version %VERSION%
+                      call pnpm publish --registry $(targetFeedUrl) --no-git-checks --no-scripts
                   displayName: Publish package (pnpm)
