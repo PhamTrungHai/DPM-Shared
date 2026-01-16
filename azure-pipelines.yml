@@ -10,7 +10,8 @@ pr:
 resources:
     pipelines: []
     repositories: []
-
+pool:
+    name: 'AgentDocker'
 stages:
     - stage: Build
       displayName: Build & Test
