@@ -51,9 +51,6 @@ stages:
                 - task: npmAuthenticate@0
                   inputs:
                       workingFile: .npmrc
-                - script: |
-                      pnpm whoami --registry https://devopsrc.vuthao.com/SourceCode/DPM.Platform/_packaging/DPM.UI.Shared/npm/registry/
-                  displayName: Debug whoami
 
                 - script: |
                       corepack enable
